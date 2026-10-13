@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facha · Turnos con seña y clientes que vuelven, para barberías</title>
+<meta name="description" content="Agenda online para barberías de barrio. Reservas 24 hs, seña por Mercado Pago, recordatorios por WhatsApp y reactivación de clientes.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+:root{
+  --ink:#111; --ink-2:#55524c; --ink-3:#8a867e;
+  --bg:#faf8f4; --paper:#fff; --line:#e6e1d8; --line-2:#efebe4;
+  --accent:#e8590c; --accent-ink:#b8460a; --accent-soft:#fdf0e8;
+  --ok:#1f7a4d; --mp:#009ee3; --wa:#e7f6dc;
+  --r:8px;
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--font);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+p{margin:0}
+button,input{font:inherit;color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+.num{font-variant-numeric:tabular-nums}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 16px;border-radius:var(--r);border:1px solid transparent;font-weight:500;font-size:15px;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:not(:disabled):hover{background:var(--accent-ink)}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:hover{background:#2a2a2a}
+.btn-line{background:var(--paper);border-color:var(--line)}
+.btn-line:not(:disabled):hover{border-color:#cfc8bc}
+.btn-mp{background:var(--mp);color:#fff;width:100%}
+.btn-sm{height:32px;padding:0 12px;font-size:14px}
+.link{background:none;border:0;padding:0;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:14px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:10;background:rgba(250,248,244,.92);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line-2)}
+.nav .wrap{display:flex;align-items:center;height:60px;gap:32px}
+.nav img{height:30px;width:auto;display:block}
+.nav ul{display:flex;gap:24px;list-style:none;margin:0;padding:0;font-size:15px;color:var(--ink-2)}
+.nav ul a{text-decoration:none}
+.nav ul a:hover{color:var(--ink)}
+.nav .right{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:15px}
+.nav .right a:not(.btn){text-decoration:none;color:var(--ink-2)}
+
+/* hero */
+.hero{padding:72px 0 0}
+.hero-top{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:end}
+.hero h1{font-size:clamp(36px,5.2vw,58px);letter-spacing:-.03em;line-height:1.04;max-width:15ch}
+.hero .lede{font-size:18px;color:var(--ink-2);max-width:46ch}
+.hero .ctas{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.hero .fine{margin-top:12px;font-size:14px;color:var(--ink-3)}
+
+/* demo frame */
+.demo{margin-top:56px}
+.demo-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
+.seg{display:inline-flex;padding:3px;background:#efebe4;border-radius:10px}
+.seg button{border:0;background:none;height:34px;padding:0 14px;border-radius:7px;font-size:14px;font-weight:500;color:var(--ink-2);cursor:pointer}
+.seg button[aria-selected=true]{background:var(--paper);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.demo-note{font-size:13px;color:var(--ink-3)}
+.frame{background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(17,17,17,.04),0 12px 32px -12px rgba(17,17,17,.12);overflow:hidden}
+.urlbar{display:flex;align-items:center;gap:10px;height:40px;padding:0 14px;border-bottom:1px solid var(--line-2);font-size:13px;color:var(--ink-3)}
+.urlbar span{background:#f4f1ec;border-radius:6px;padding:3px 10px}
+.urlbar .reset{margin-left:auto;font-size:13px}
+
+/* client view */
+.book{display:grid;grid-template-columns:300px 1fr;min-height:520px}
+.shop{padding:28px;border-right:1px solid var(--line-2);background:#fcfbf9}
+.shop .av{width:44px;height:44px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:600;font-size:15px}
+.shop h3{font-size:18px;margin-top:14px}
+.shop .addr{font-size:14px;color:var(--ink-2);margin-top:2px}
+.shop dl{margin:24px 0 0;font-size:14px;display:grid;gap:10px}
+.shop dt{color:var(--ink-3)} .shop dd{margin:0}
+.shop .pick{margin-top:24px;padding-top:16px;border-top:1px solid var(--line-2);font-size:14px;display:grid;gap:6px}
+.shop .pick div{display:flex;justify-content:space-between;gap:8px}
+.shop .pick span{color:var(--ink-3)}
+.step{display:flex;flex-direction:column;padding:28px 32px}
+.step-k{font-size:13px;color:var(--ink-3)}
+.step h3{font-size:20px;margin:4px 0 20px}
+.step-body{flex:1;max-width:560px}
+.step-foot{display:flex;gap:10px;justify-content:flex-end;padding-top:20px;margin-top:20px;border-top:1px solid var(--line-2)}
+.svc{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;padding:14px 16px;margin-bottom:8px;background:var(--paper);border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
+.svc:hover{border-color:#cfc8bc}
+.svc small{display:block;color:var(--ink-3);font-size:13px}
+.svc.sel,.day.sel,.slot.sel{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:18px}
+.day{padding:8px 0;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);cursor:pointer;text-align:center;line-height:1.2}
+.day small{display:block;font-size:12px;color:var(--ink-3)}
+.day b{font-weight:600}
+.slots{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.slot{height:38px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);cursor:pointer;font-size:14px}
+.slot:disabled{color:#c4beb3;text-decoration:line-through;background:#f7f5f1;cursor:not-allowed}
+.field{width:100%;max-width:360px;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+.field:focus{outline:none;border-color:var(--ink)}
+.hint{min-height:20px;margin-top:8px;font-size:14px;color:var(--accent-ink)}
+.lbl{display:block;font-size:14px;color:var(--ink-2);margin-bottom:6px}
+.rows{border:1px solid var(--line);border-radius:var(--r);font-size:15px;max-width:440px}
+.rows div{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid var(--line-2)}
+.rows div:first-child{border-top:0}
+.rows span{color:var(--ink-2)}
+.rows .tot{font-weight:600}
+.rows .tot span{color:var(--ink)}
+.mp{max-width:360px;border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.mp-h{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.mp-h i{width:22px;height:22px;border-radius:50%;background:var(--mp);display:inline-block}
+.mp .amt{font-size:28px;font-weight:600;margin:14px 0 2px}
+.mp p{font-size:14px;color:var(--ink-2);margin-bottom:16px}
+.bar{height:3px;background:var(--line-2);border-radius:2px;overflow:hidden;margin-top:14px}
+.bar i{display:block;height:100%;width:30%;background:var(--mp);animation:load 1.2s ease-in-out infinite}
+@keyframes load{0%{transform:translateX(-100%)}100%{transform:translateX(340%)}}
+.done{display:flex;gap:12px;align-items:flex-start;margin-bottom:20px}
+.done svg{flex:none;width:22px;height:22px;stroke:var(--ok);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+.done p{color:var(--ink-2);font-size:15px}
+.wa{max-width:420px;background:#efeae2;border-radius:var(--r);padding:12px}
+.wa-k{font-size:12px;color:var(--ink-3);margin-bottom:8px}
+.wa-msg{background:var(--wa);border-radius:8px 8px 8px 2px;padding:8px 10px 6px;font-size:14px;line-height:1.45}
+.wa-msg small{display:block;text-align:right;font-size:11px;color:#6b7a63;margin-top:2px}
+
+/* panel */
+.panel{display:grid;grid-template-columns:200px 1fr;min-height:520px}
+.side{border-right:1px solid var(--line-2);padding:20px 12px;background:#fcfbf9;font-size:14px}
+.side b{display:block;padding:0 10px 14px}
+.side a{display:block;padding:7px 10px;border-radius:6px;text-decoration:none;color:var(--ink-2)}
+.side a.on{background:#f1ede6;color:var(--ink);font-weight:500}
+.main{padding:24px 28px}
+.main-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:18px}
+.main-h h3{font-size:18px}
+.main-h span{font-size:14px;color:var(--ink-3)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:var(--r);margin-bottom:24px}
+.stats div{padding:14px 16px;border-left:1px solid var(--line-2)}
+.stats div:first-child{border-left:0}
+.stats span{display:block;font-size:13px;color:var(--ink-3)}
+.stats b{display:block;font-size:22px;font-weight:600;letter-spacing:-.01em;margin:2px 0}
+.stats small{font-size:12px;color:var(--ink-3)}
+.cols{display:grid;grid-template-columns:1.2fr 1fr;gap:28px}
+.cols h4{font-size:14px;margin-bottom:8px;display:flex;justify-content:space-between}
+.cols h4 span{font-weight:400;color:var(--ink-3)}
+.list{list-style:none;margin:0 0 20px;padding:0;border-top:1px solid var(--line-2)}
+.list li{border-bottom:1px solid var(--line-2);padding:10px 0;font-size:14px}
+.appt{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center}
+.appt time{color:var(--ink-2)}
+.appt span{display:block;color:var(--ink-3);font-size:13px}
+.appt .paid{font-size:13px;color:var(--ok);text-align:right}
+.tag{display:inline-block;font-style:normal;font-size:11px;font-weight:600;color:var(--accent-ink);background:var(--accent-soft);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+.appt.new{box-shadow:inset 3px 0 0 var(--accent);padding-left:10px}
+.who{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.who span{display:block;color:var(--ink-3);font-size:13px}
+.who + .wa-msg{margin-top:8px}
+
+/* sections */
+section.s{padding:104px 0;border-top:1px solid var(--line-2)}
+.s-h{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-bottom:48px;align-items:end}
+.s-h h2{font-size:clamp(28px,3.4vw,40px);letter-spacing:-.025em;max-width:18ch}
+.s-h p{color:var(--ink-2);font-size:17px;max-width:46ch}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;list-style:none;padding:0;margin:0}
+.steps li{border-top:2px solid var(--ink);padding-top:16px}
+.steps li:nth-child(n+2){border-top-color:var(--line)}
+.steps .n{font-size:14px;color:var(--ink-3)}
+.steps h3{font-size:19px;margin:6px 0 8px}
+.steps p{color:var(--ink-2);font-size:15px}
+
+.react{display:grid;grid-template-columns:1fr 1.25fr;gap:56px;align-items:start}
+.react h2{font-size:clamp(28px,3.4vw,40px);letter-spacing:-.025em}
+.react .copy p{color:var(--ink-2);font-size:17px;margin-top:16px;max-width:44ch}
+.react .copy ul{margin:24px 0 0;padding:0;list-style:none;font-size:15px;border-top:1px solid var(--line)}
+.react .copy li{padding:12px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px}
+.react .copy li span{color:var(--ink-2)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;color:var(--ink-3);font-size:13px;padding:10px 16px;border-bottom:1px solid var(--line-2)}
+td{padding:12px 16px;border-bottom:1px solid var(--line-2);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.st{font-size:13px;white-space:nowrap}
+.react td:nth-child(3){white-space:nowrap}
+.st.due{color:var(--accent-ink)} .st.ok{color:var(--ok)} .st.mut{color:var(--ink-3)}
+.frame-h{padding:14px 16px;border-bottom:1px solid var(--line-2);display:flex;justify-content:space-between;font-size:14px}
+.frame-h b{font-weight:600} .frame-h span{color:var(--ink-3)}
+
+.cost{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;font-size:20px;margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--line)}
+.cost b{font-weight:600}
+.cost .eq{color:var(--accent);font-weight:600}
+.cost small{flex-basis:100%;font-size:14px;color:var(--ink-3)}
+.vs{border:1px solid var(--line);border-radius:12px;background:var(--paper);overflow:hidden}
+.vs th{font-size:14px;color:var(--ink);font-weight:600;padding:14px 20px;background:#fcfbf9}
+.vs td{padding:14px 20px;font-size:15px}
+.vs td:first-child{color:var(--ink-3);width:24%}
+.vs td:nth-child(2){color:var(--ink-2);width:38%}
+
+.plans{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--line);border-radius:12px;background:var(--paper);overflow:hidden}
+.plan{padding:32px}
+.plan + .plan{border-left:1px solid var(--line)}
+.plan h3{font-size:16px}
+.plan .p{font-size:40px;font-weight:600;letter-spacing:-.02em;margin:10px 0 2px}
+.plan .p small{font-size:15px;font-weight:400;color:var(--ink-3);letter-spacing:0}
+.plan .d{color:var(--ink-2);font-size:15px;min-height:48px}
+.plan ul{list-style:none;padding:0;margin:24px 0 28px;font-size:15px}
+.plan li{padding:8px 0 8px 24px;position:relative;border-top:1px solid var(--line-2)}
+.plan li::before{content:"";position:absolute;left:2px;top:15px;width:10px;height:5px;border-left:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);transform:rotate(-45deg)}
+.plan .btn{width:100%}
+.plan.pro h3{display:flex;gap:8px;align-items:center}
+.plan.pro h3 em{font-style:normal;font-size:12px;font-weight:500;color:var(--accent-ink)}
+.plan.rec{box-shadow:inset 0 3px 0 var(--accent)}
+.guar{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:28px;font-size:15px;color:var(--ink-2)}
+.guar b{color:var(--ink);font-weight:600}
+
+.faq{display:grid;grid-template-columns:1fr 2fr;gap:48px}
+.faq h2{font-size:clamp(28px,3.4vw,40px);letter-spacing:-.025em}
+.faq > div > p{color:var(--ink-2);margin-top:12px}
+details{border-top:1px solid var(--line)}
+details:last-child{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding:18px 32px 18px 0;font-weight:500;font-size:17px;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:4px;top:15px;font-size:22px;font-weight:300;color:var(--ink-3)}
+details[open] summary::after{content:"−"}
+details p{padding:0 32px 20px 0;color:var(--ink-2);max-width:62ch}
+
+.launch{background:var(--ink);color:#fff;border-radius:14px;padding:48px;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:end}
+.launch h2{font-size:clamp(26px,3vw,36px);letter-spacing:-.025em;max-width:20ch}
+.launch p{color:#b9b5ad;margin-top:14px;max-width:44ch}
+.launch form{display:grid;gap:10px}
+.launch label{font-size:14px;color:#b9b5ad}
+.launch .in{display:flex;gap:8px}
+.launch input{flex:1;min-width:0;height:44px;padding:0 12px;border-radius:var(--r);border:1px solid #3a3a3a;background:#1c1c1c;color:#fff}
+.launch input::placeholder{color:#77736c}
+.launch input:focus{outline:none;border-color:#fff}
+.launch .btn{height:44px}
+.launch .msg{font-size:14px;min-height:20px;color:#b9b5ad}
+.launch .msg.ok{color:#fff}
+
+footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
+.foot{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;font-size:14px}
+.foot img{height:28px;display:block}
+.foot p{color:var(--ink-3);margin-top:12px;max-width:32ch}
+.foot h4{font-size:13px;font-weight:500;color:var(--ink-3);margin-bottom:10px}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.foot a{text-decoration:none;color:var(--ink-2)}
+.foot a:hover{color:var(--ink)}
+.legal{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:48px;padding-top:20px;border-top:1px solid var(--line-2);font-size:13px;color:var(--ink-3)}
+
+@media (max-width:900px){
+  .hero-top,.s-h,.react,.faq,.launch,.guar{grid-template-columns:1fr;gap:20px}
+  .book,.panel{grid-template-columns:1fr}
+  .shop{border-right:0;border-bottom:1px solid var(--line-2);padding:20px}
+  .shop dl,.shop .pick{display:none}
+  .side{display:none}
+  .cols{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .stats div:nth-child(3){border-left:0}
+  .stats div:nth-child(n+3){border-top:1px solid var(--line-2)}
+  .steps{grid-template-columns:1fr}
+  .plans{grid-template-columns:1fr}
+  .plan + .plan{border-left:0;border-top:1px solid var(--line)}
+  .foot{grid-template-columns:1fr 1fr}
+  .foot > div:first-child{grid-column:1/-1}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .nav ul,.nav .right a:not(.btn){display:none}
+  .hero{padding-top:44px}
+  .demo{margin-top:40px}
+  .demo-note{display:none}
+  .step{padding:20px 16px}
+  .main{padding:18px 16px}
+  .slots{grid-template-columns:repeat(4,1fr)}
+  .days{gap:4px}
+  .step-foot .btn{flex:1}
+  .urlbar .reset{display:none}
+  section.s{padding:72px 0}
+  .s-h{margin-bottom:32px}
+  .vs td,.vs th{padding:12px}
+  .vs thead tr,.vs tbody tr{display:grid;grid-template-columns:1fr 1fr}
+  .vs th:first-child{display:none}
+  .vs td:first-child{grid-column:1/-1;width:auto;padding-bottom:0;color:var(--ink);font-weight:500}
+  .vs td{width:auto!important;border-bottom:0}
+  .vs tbody tr{border-top:1px solid var(--line-2)}
+  .react th:nth-child(2),.react td:nth-child(2){display:none}
+  .plan{padding:24px}
+  .launch{padding:28px 20px}
+  .launch .in{flex-direction:column}
+  footer{margin-top:72px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.bar i{animation:none;width:100%}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a href="#" aria-label="Facha, inicio"><img class="logo" src="logo.svg" alt="Facha" width="121" height="30"></a>
+    <ul>
+      <li><a href="#producto">Producto</a></li>
+      <li><a href="#precios">Precios</a></li>
+      <li><a href="#preguntas">Preguntas</a></li>
+    </ul>
+    <div class="right">
+      <a href="#">Ingresar</a>
+      <a class="btn btn-primary btn-sm" href="#lanzamiento">Probar gratis</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <h1>Que reserven solos, que dejen seña y que vuelvan.</h1>
+      <div>
+        <p class="lede">Facha es la agenda online para barberías de barrio. Tus clientes sacan turno desde un link, pagan la seña con Mercado Pago y, cuando hace rato que no vienen, les escribimos por WhatsApp.</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href="#lanzamiento">Probar gratis</a>
+          <a class="btn btn-line" href="#producto">Probar la demo</a>
+        </div>
+        <p class="fine">Gratis hasta 30 turnos por mes. Sin tarjeta.</p>
+      </div>
+    </div>
+
+    <div class="demo" id="producto">
+      <div class="demo-bar">
+        <div class="seg" role="tablist" aria-label="Demo">
+          <button role="tab" id="tab-cliente" aria-controls="view-cliente" aria-selected="true">Vista cliente</button>
+          <button role="tab" id="tab-barbero" aria-controls="view-barbero" aria-selected="false" tabindex="-1">Panel del barbero</button>
+        </div>
+        <span class="demo-note">Demo funcional. Sacá un turno y miralo en el panel.</span>
+      </div>
+
+      <div class="frame">
+        <div id="view-cliente" role="tabpanel" aria-labelledby="tab-cliente">
+          <div class="urlbar"><span>facha.app/donjuan</span></div>
+          <div class="book">
+            <aside class="shop">
+              <div class="av">DJ</div>
+              <h3>Barbería Don Juan</h3>
+              <p class="addr">Villa Crespo, CABA</p>
+              <dl>
+                <div><dt>Horario</dt><dd>Lun a sáb · 10 a 19 hs</dd></div>
+                <div><dt>Seña</dt><dd>30% al reservar, por Mercado Pago</dd></div>
+                <div><dt>Cancelaciones</dt><dd>Hasta 12 hs antes, te devolvemos la seña</dd></div>
+              </dl>
+              <div class="pick" id="pick"></div>
+            </aside>
+            <div class="step">
+              <span class="step-k" id="stepK"></span>
+              <div class="step-body" id="appBody"></div>
+              <div class="step-foot" id="appFoot"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="view-barbero" role="tabpanel" aria-labelledby="tab-barbero" hidden>
+          <div class="urlbar"><span>facha.app/panel</span><button class="link reset" id="resetDemo">Reiniciar demo</button></div>
+          <div class="panel">
+            <nav class="side" aria-label="Panel">
+              <b>Barbería Don Juan</b>
+              <a class="on" href="#producto">Agenda</a>
+              <a href="#producto">Clientes</a>
+              <a href="#producto">Señas</a>
+              <a href="#producto">Servicios</a>
+              <a href="#producto">Ajustes</a>
+            </nav>
+            <div class="main">
+              <div class="main-h"><h3>Agenda</h3><span id="monthLbl"></span></div>
+              <div class="stats num" id="stats"></div>
+              <div class="cols">
+                <div id="agenda"></div>
+                <div>
+                  <h4>Para reactivar <span>no vienen hace más de 4 semanas</span></h4>
+                  <ul class="list" id="react"></ul>
+                  <h4>Clientes recuperados este mes <span>vinieron por un mensaje</span></h4>
+                  <ul class="list" id="recovered"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="como-funciona">
+  <div class="wrap">
+    <div class="s-h">
+      <h2>Lo dejás andando en una tarde.</h2>
+      <p>No tenés que cargar nada. Nos pasás tus servicios y horarios por WhatsApp y te devolvemos el link listo para poner en tu Instagram.</p>
+    </div>
+    <ol class="steps">
+      <li><span class="n">1</span><h3>Armamos tu agenda</h3><p>Servicios, precios, horarios y cuántos sillones tenés. Conectamos tu cuenta de Mercado Pago.</p></li>
+      <li><span class="n">2</span><h3>Tus clientes reservan y señan</h3><p>Eligen horario desde el link, pagan el 30% y les llega un recordatorio por WhatsApp el día anterior.</p></li>
+      <li><span class="n">3</span><h3>Facha los trae de vuelta</h3><p>Si alguien se pasa de su ritmo habitual de corte, le escribimos con tu link y los horarios libres de la semana.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="s" id="reactivacion">
+  <div class="wrap react">
+    <div class="copy">
+      <h2>La mayoría no se va a otra barbería. Se olvida.</h2>
+      <p>Facha aprende cada cuánto se corta cada cliente. Cuando alguien se atrasa, le manda un WhatsApp con tu link: “¿Te toca corte?”. Vos no escribís nada.</p>
+      <ul class="num">
+        <li><span>Un cliente que vuelve una vez más</span><b>$22.000</b></li>
+        <li><span>Cinco por mes</span><b>$110.000</b></li>
+        <li><span>Plan Pro</span><b>$14.900</b></li>
+      </ul>
+    </div>
+    <div class="frame">
+      <div class="frame-h"><b>Clientes</b><span>ordenados por atraso</span></div>
+      <table class="num">
+        <thead><tr><th>Cliente</th><th>Viene cada</th><th>Última vez</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Santiago Ledesma</td><td>4 sem</td><td>hace 7 sem</td><td><span class="st due">Le escribimos el lunes</span></td></tr>
+          <tr><td>Joaquín Ríos</td><td>3 sem</td><td>hace 6 sem</td><td><span class="st ok">Reservó jue 17:30</span></td></tr>
+          <tr><td>Martín Sosa</td><td>4 sem</td><td>hace 5 sem</td><td><span class="st due">Le escribimos hoy</span></td></tr>
+          <tr><td>Lucas Ferreyra</td><td>3 sem</td><td>hace 2 sem</td><td><span class="st mut">Al día</span></td></tr>
+          <tr><td>Nicolás Paz</td><td>5 sem</td><td>hace 3 sem</td><td><span class="st mut">Al día</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="comparacion">
+  <div class="wrap">
+    <div class="s-h">
+      <h2>Lo que hoy hacés por WhatsApp, sin contestar mensajes.</h2>
+      <p>WhatsApp sirve para hablar con tus clientes. Para manejar la agenda te hace perder tiempo entre corte y corte, y plata cuando alguien no viene.</p>
+    </div>
+    <p class="cost num"><span>4 ausencias por semana</span><span>×</span><b>$22.000</b><span class="eq">≈ $350.000 por mes</span><small>Lo que pierde una barbería con un sillón cuando no cobra seña. Con seña, el horario se paga igual o se libera a tiempo.</small></p>
+    <div class="vs">
+      <table>
+        <thead><tr><th></th><th>Por WhatsApp, a mano</th><th>Con Facha</th></tr></thead>
+        <tbody>
+          <tr><td>Reservar</td><td>Cinco mensajes para encontrar un horario</td><td>El cliente elige solo, a cualquier hora</td></tr>
+          <tr><td>Seña</td><td>Pedís transferencia y revisás si llegó</td><td>30% por Mercado Pago al reservar</td></tr>
+          <tr><td>Recordatorio</td><td>Si te acordás</td><td>WhatsApp automático el día anterior</td></tr>
+          <tr><td>Cancelaciones</td><td>Te enterás cuando no viene</td><td>El horario se libera y otro lo puede tomar</td></tr>
+          <tr><td>Clientes que dejan de venir</td><td>No te enterás</td><td>Les escribimos cuando se atrasan</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="precios">
+  <div class="wrap">
+    <div class="s-h">
+      <h2>Precios</h2>
+      <p>Empezás gratis. Para cobrar seña y reactivar clientes, elegís: cuota fija o pagás solo por los clientes que vuelven. Sin permanencia.</p>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3>Gratis</h3>
+        <p class="p num">$0</p>
+        <p class="d">Para probar con tus clientes de siempre.</p>
+        <ul>
+          <li>Hasta 30 turnos por mes</li>
+          <li>Link de reservas para Instagram y WhatsApp</li>
+          <li>Recordatorio por email</li>
+          <li>Panel con agenda del día</li>
+        </ul>
+        <a class="btn btn-line" href="#lanzamiento">Empezar gratis</a>
+      </div>
+      <div class="plan pro">
+        <h3>Pro <em>Setup gratis en el lanzamiento</em></h3>
+        <p class="p num">$14.900 <small>/ mes</small></p>
+        <p class="d">Para la barbería que vive de los turnos.</p>
+        <ul>
+          <li>Turnos ilimitados</li>
+          <li>Seña por Mercado Pago</li>
+          <li>Recordatorios por WhatsApp ilimitados</li>
+          <li>Reactivación automática de clientes</li>
+          <li>Setup hecho por nosotros</li>
+        </ul>
+        <a class="btn btn-line" href="#lanzamiento">Probar Pro</a>
+      </div>
+      <div class="plan pro rec">
+        <h3>Por resultado <em>Recomendado</em></h3>
+        <p class="p num">$0 <small>fijo</small></p>
+        <p class="d">Pagás $3.000 por cada cliente que vuelve gracias a un mensaje de reactivación.</p>
+        <ul>
+          <li>Todo lo de Pro</li>
+          <li>Sin cuota mensual</li>
+          <li>Si no vuelve nadie, no pagás nada</li>
+        </ul>
+        <a class="btn btn-primary" href="#lanzamiento">Empezar sin riesgo</a>
+      </div>
+    </div>
+    <div class="guar">
+      <p><b>Garantía.</b> Pro: si en el primer mes no recuperás más de lo que pagás, no pagás. Por resultado: si no vuelve nadie, no pagás nada.</p>
+      <p>La comisión de Mercado Pago la cobra Mercado Pago. Facha no se queda con ningún porcentaje de tus señas.</p>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="preguntas">
+  <div class="wrap faq">
+    <div>
+      <h2>Preguntas</h2>
+      <p>¿Otra duda? Escribinos a <a href="mailto:hola@facha.app">hola@facha.app</a>.</p>
+    </div>
+    <div>
+      <details><summary>¿Mis clientes tienen que bajarse una app?</summary><p>No. Reservan desde un link que abre en el navegador del celular. Lo ponés en la bio de Instagram o lo mandás por WhatsApp.</p></details>
+      <details><summary>¿Cuándo me llega la plata de las señas?</summary><p>Va directo a tu cuenta de Mercado Pago, en los plazos que tengas configurados ahí. Nosotros nunca tocamos esa plata.</p></details>
+      <details><summary>¿Qué pasa si el cliente cancela?</summary><p>Vos definís la regla. Por defecto, si cancela con más de 12 horas se le devuelve la seña; si no viene, la seña queda para vos.</p></details>
+      <details><summary>¿Cómo sabe Facha a quién escribirle?</summary><p>Mira las visitas de cada cliente. Si alguien se corta cada 4 semanas y ya van 5, le manda un mensaje con tu link. Podés pausarlo por cliente o apagarlo del todo.</p></details>
+      <details><summary>¿Sirve si somos varios barberos?</summary><p>Sí. Cada barbero tiene su agenda y el cliente elige con quién se atiende.</p></details>
+      <details><summary>¿Cómo funciona la garantía?</summary><p>Al terminar el primer mes de Pro sumamos las señas cobradas por ausencias y los turnos que vinieron por reactivación. Si eso no supera los $14.900, no te cobramos el mes.</p></details>
+      <details><summary>¿Cómo cuentan un cliente recuperado en el plan Por resultado?</summary><p>Es alguien que no venía hace 4 semanas o más, recibió nuestro mensaje de reactivación y reservó turno dentro de los 14 días siguientes. Solo esos se cobran, a $3.000 cada uno, y los ves uno por uno en el panel.</p></details>
+      <details><summary>¿Hay permanencia?</summary><p>No. Cancelás desde el panel cuando quieras y volvés al plan Gratis.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="lanzamiento">
+  <div class="wrap">
+    <div class="launch">
+      <div>
+        <h2>Lanzamiento en Villa Crespo: setup gratis para los primeros 50 barberos</h2>
+        <p>Pasamos por tu barbería, cargamos todo y conectamos tu Mercado Pago. Después seguís en Gratis o pasás a Pro.</p>
+      </div>
+      <form id="lead" novalidate>
+        <label for="tel">Tu WhatsApp</label>
+        <div class="in">
+          <input id="tel" type="tel" inputmode="tel" placeholder="11 5555 5555" autocomplete="tel">
+          <button class="btn btn-primary" type="submit">Probar gratis</button>
+        </div>
+        <p class="msg" id="leadMsg" role="status">Te escribimos nosotros. No te vamos a llenar de mensajes.</p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><img class="logo" src="logo.svg" alt="Facha" width="113" height="28"><p>Tu barbería, con facha. Agenda, señas y reactivación de clientes para barberías.</p></div>
+      <div><h4>Producto</h4><ul><li><a href="#producto">Demo</a></li><li><a href="#precios">Precios</a></li><li><a href="#preguntas">Preguntas</a></li></ul></div>
+      <div><h4>Contacto</h4><ul><li><a href="mailto:hola@facha.app">hola@facha.app</a></li><li><a href="#">Instagram</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="#">Términos y condiciones</a></li><li><a href="#">Privacidad</a></li><li><a href="#">Botón de arrepentimiento</a></li></ul></div>
+    </div>
+    <div class="legal"><span>© 2026 Facha</span><span>Hecho en Buenos Aires</span></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const SERVICES = [
+    { name: 'Corte', time: '30 min', price: 22000 },
+    { name: 'Corte + barba', time: '45 min', price: 30000 },
+    { name: 'Barba', time: '20 min', price: 16000 },
+  ];
+  const SENA = 0.3;
+  const HOURS = ['10:00','10:30','11:00','11:30','12:00','15:00','15:30','16:00','16:30','17:00','17:30','18:00'];
+  const DAYS_SHORT = ['dom','lun','mar','mié','jue','vie','sáb'];
+  const DAYS_LONG = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+  const $ = id => document.getElementById(id);
+  const body = $('appBody'), foot = $('appFoot');
+  const money = n => '$' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + i); return d;
+  });
+  const longDate = d => `${DAYS_LONG[d.getDay()]} ${d.getDate()} de ${MONTHS[d.getMonth()]}`;
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  // Shared demo state: bookings from the client view + reactivation messages sent.
+  // localStorage survives reloads on file://; falls back to memory if blocked.
+  const KEY = 'facha-demo-v1';
+  const ls = (() => { try { localStorage.setItem(KEY + '-t', '1'); localStorage.removeItem(KEY + '-t'); return localStorage; } catch { return null; } })();
+  const db = (() => { try { return JSON.parse(ls?.getItem(KEY)) || null; } catch { return null; } })() || { bookings: [], sent: [] };
+  const save = () => { try { ls?.setItem(KEY, JSON.stringify(db)); } catch {} };
+
+  // Deterministic "taken" slots so the demo looks the same on every reload
+  const isTaken = (dayIdx, h) => ((dayIdx * 7 + h * 5 + 3) % 11) < 4 ||
+    db.bookings.some(b => b.date === iso(days[dayIdx]) && b.hour === HOURS[h]);
+
+  let s;
+  const reset = () => { s = { step: 0, service: null, day: 0, hour: null, name: '' }; render(); };
+  const go = step => { s.step = step; render(); };
+
+  const btn = (label, cls, onClick, disabled) => {
+    const b = document.createElement('button');
+    b.className = 'btn ' + cls; b.textContent = label; b.disabled = !!disabled; b.onclick = onClick;
+    return b;
+  };
+  const setFoot = (...btns) => { foot.replaceChildren(...btns); foot.hidden = !btns.length; };
+  const back = () => btn('Atrás', 'btn-line', () => go(s.step - 1));
+  const title = t => `<h3>${t}</h3>`;
+
+  const screens = [
+    () => {
+      body.innerHTML = title('Elegí el servicio') + SERVICES.map((x, i) =>
+        `<button class="svc${s.service === i ? ' sel' : ''}" data-i="${i}"><span>${x.name}<small>${x.time}</small></span><b class="num">${money(x.price)}</b></button>`).join('');
+      body.querySelectorAll('.svc').forEach(el => el.onclick = () => { s.service = +el.dataset.i; render(); });
+      setFoot(btn('Continuar', 'btn-primary', () => go(1), s.service === null));
+    },
+    () => {
+      body.innerHTML = title('Elegí día y horario') + '<div class="days">' + days.map((d, i) =>
+        `<button class="day${s.day === i ? ' sel' : ''}" data-i="${i}"><small>${i === 0 ? 'hoy' : DAYS_SHORT[d.getDay()]}</small><b>${d.getDate()}</b></button>`).join('') +
+        '</div><div class="slots num">' + HOURS.map((h, i) =>
+        `<button class="slot${s.hour === h ? ' sel' : ''}" data-h="${h}"${isTaken(s.day, i) ? ' disabled' : ''}>${h}</button>`).join('') + '</div>';
+      body.querySelectorAll('.day').forEach(el => el.onclick = () => { s.day = +el.dataset.i; s.hour = null; render(); });
+      body.querySelectorAll('.slot:not(:disabled)').forEach(el => el.onclick = () => { s.hour = el.dataset.h; render(); });
+      setFoot(back(), btn('Continuar', 'btn-primary', () => go(2), !s.hour));
+    },
+    () => {
+      body.innerHTML = title('Tus datos') + '<label class="lbl" for="nameIn">Nombre</label><input class="field" id="nameIn" maxlength="30" placeholder="Martín" autocomplete="given-name"><p class="hint" id="hint" role="alert"></p>';
+      const inp = $('nameIn'), next = btn('Continuar', 'btn-primary', () => {
+        if (s.name.length < 2) { $('hint').textContent = 'Poné tu nombre así Juan sabe quién viene.'; return; }
+        go(3);
+      });
+      inp.value = s.name;
+      inp.oninput = () => { s.name = inp.value.trim(); $('hint').textContent = ''; };
+      inp.onkeydown = e => { if (e.key === 'Enter') next.click(); };
+      setFoot(back(), next);
+      inp.focus({ preventScroll: true });
+    },
+    () => {
+      const sv = SERVICES[s.service], dep = sv.price * SENA;
+      body.innerHTML = title('Revisá y pagá la seña') + `<div class="rows num">
+        <div><span>Servicio</span><b>${sv.name}</b></div>
+        <div><span>Cuándo</span><b>${longDate(days[s.day])}, ${s.hour} hs</b></div>
+        <div><span>A nombre de</span><b>${esc(s.name)}</b></div>
+        <div><span>Precio</span><span>${money(sv.price)}</span></div>
+        <div class="tot"><span>Seña ahora (30%)</span><span>${money(dep)}</span></div>
+        <div><span>En la barbería</span><span>${money(sv.price - dep)}</span></div>
+      </div>`;
+      setFoot(back(), btn(`Pagar ${money(dep)} con Mercado Pago`, 'btn-primary', () => go(4)));
+    },
+    () => {
+      const dep = SERVICES[s.service].price * SENA;
+      body.innerHTML = title('Mercado Pago') + `<div class="mp"><div class="mp-h"><i></i>Mercado Pago</div>
+        <div class="amt num">${money(dep)}</div><p>Seña · Barbería Don Juan</p><div class="bar"><i></i></div>
+        <p style="margin:10px 0 0">Procesando el pago…</p></div>`;
+      setFoot();
+      setTimeout(() => {
+        if (s.step !== 4) return;
+        db.bookings.push({ name: s.name, service: s.service, date: iso(days[s.day]), hour: s.hour });
+        save(); renderPanel(); go(5);
+      }, 1200);
+    },
+    () => {
+      const sv = SERVICES[s.service], d = days[s.day];
+      const prev = new Date(d); prev.setDate(d.getDate() - 1);
+      const when = s.day === 0 ? 'hoy a las 9:00' : `${DAYS_LONG[prev.getDay()]} a las 9:00`;
+      body.innerHTML = title('Turno confirmado') + `<div class="done"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        <p>${sv.name}, ${longDate(d)} a las ${s.hour} hs.<br>Seña pagada: <b class="num">${money(sv.price * SENA)}</b>. Te llegó el comprobante por email.</p></div>
+        <div class="wa"><div class="wa-k">Recordatorio por WhatsApp · se envía ${when}</div>
+        <div class="wa-msg">Hola ${esc(s.name)}. Te recordamos tu turno de ${sv.name.toLowerCase()} en Barbería Don Juan, ${s.day === 1 ? 'mañana' : longDate(d)} a las ${s.hour} hs. Ya pagaste ${money(sv.price * SENA)} de seña. Si no podés venir, respondé este mensaje y liberamos el horario.<small>9:00 ✓✓</small></div></div>`;
+      setFoot(btn('Ver en el panel del barbero', 'btn-line', () => showTab('barbero')), btn('Sacar otro turno', 'btn-primary', reset));
+    },
+  ];
+  const STEP_K = ['Paso 1 de 4', 'Paso 2 de 4', 'Paso 3 de 4', 'Paso 4 de 4', 'Paso 4 de 4', 'Listo'];
+
+  const renderPick = () => {
+    const sv = SERVICES[s.service];
+    $('pick').innerHTML = sv ? `<div><span>Servicio</span>${sv.name}</div>` +
+      (s.step > 1 ? `<div><span>Día</span>${DAYS_SHORT[days[s.day].getDay()]} ${days[s.day].getDate()}, ${s.hour}</div>` : '') +
+      `<div><span>Seña</span><b class="num">${money(sv.price * SENA)}</b></div>` : '';
+  };
+
+  /* ---------- Panel del barbero ---------- */
+  const SEED_TODAY = [ // matches the slots isTaken() marks for today
+    { hour: '10:00', name: 'Lucas Ferreyra', service: 0 },
+    { hour: '11:00', name: 'Nicolás Paz', service: 1 },
+    { hour: '12:00', name: 'Tomás Gutiérrez', service: 2 },
+    { hour: '15:30', name: 'Facundo Romero', service: 0 },
+    { hour: '18:00', name: 'Mateo Díaz', service: 1 },
+  ];
+  // 50 cortes + 26 corte y barba + 10 barbas
+  const SEED_MONTH = { turnos: 86, ingresos: 2040000, ausencias: 2 };
+  const DUE = [
+    { name: 'Santiago Ledesma', weeks: 7, service: 1, slot: 'mañana a las 16:00' },
+    { name: 'Joaquín Ríos', weeks: 6, service: 0, slot: 'el jueves a las 17:30' },
+    { name: 'Martín Sosa', weeks: 5, service: 0, slot: 'el viernes a las 11:30' },
+  ];
+  const RECOVERED = [['Lucas Benítez', 2], ['Tomás Aguirre', 5], ['Ezequiel Moreno', 9]];
+  const PER_RECOVERED = 3000;
+  const reactMsg = c => `Hola ${esc(c.name.split(' ')[0])}, ¿cómo va? Ya pasaron ${c.weeks} semanas de tu último corte. ¿Te toca corte? Juan tiene lugar ${c.slot}. Reservá acá: facha.app/donjuan<small>ahora ✓✓</small>`;
+  const apptRow = a => `<li class="appt${a.isNew ? ' new' : ''}"><time class="num">${a.hour}</time><div><b>${esc(a.name)}</b>${a.isNew ? '<em class="tag">Nuevo</em>' : ''}<span>${SERVICES[a.service].name} · ${money(SERVICES[a.service].price)}</span></div><span class="paid num">Seña ${money(SERVICES[a.service].price * SENA)}</span></li>`;
+
+  function renderPanel() {
+    const today = iso(days[0]);
+    const mine = db.bookings.map(b => ({ ...b, isNew: true }));
+    const todayList = [...SEED_TODAY, ...mine.filter(b => b.date === today)].sort((a, b) => a.hour.localeCompare(b.hour));
+    const later = mine.filter(b => b.date !== today).sort((a, b) => (a.date + a.hour).localeCompare(b.date + b.hour));
+    const extra = mine.reduce((t, b) => t + SERVICES[b.service].price, 0);
+    const senasHoy = todayList.reduce((t, a) => t + SERVICES[a.service].price * SENA, 0);
+    const n = mine.length;
+
+    $('monthLbl').textContent = `${MONTHS[days[0].getMonth()]} ${days[0].getFullYear()}`;
+    $('stats').innerHTML = [
+      ['Turnos del mes', SEED_MONTH.turnos + n, n ? `${n} desde esta demo` : 'todos con seña'],
+      ['Facturación estimada', money(SEED_MONTH.ingresos + extra), 'precio de lista'],
+      ['Señas del mes', money((SEED_MONTH.ingresos + extra) * SENA), 'en tu Mercado Pago'],
+      ['Ausencias', SEED_MONTH.ausencias, 'seña retenida'],
+    ].map(([l, v, sub]) => `<div><span>${l}</span><b>${v}</b><small>${sub}</small></div>`).join('');
+
+    $('agenda').innerHTML = `<h4>Hoy, ${longDate(days[0])} <span class="num">${money(senasHoy)} en señas</span></h4><ul class="list">${todayList.map(apptRow).join('')}</ul>` +
+      (later.length ? `<h4>Próximos días</h4><ul class="list">${later.map(b => apptRow({ ...b, hour: `${DAYS_SHORT[new Date(b.date + 'T00:00').getDay()]} ${b.hour}` })).join('')}</ul>` : '');
+
+    $('react').innerHTML = DUE.map((c, i) => {
+      const sent = db.sent.includes(c.name);
+      return `<li><div class="who"><div><b>${c.name}</b><span>Último corte hace ${c.weeks} semanas</span></div>
+        <button class="btn btn-sm ${sent ? 'btn-line' : 'btn-dark'}" data-i="${i}"${sent ? ' disabled' : ''}>${sent ? 'Enviado' : 'Enviar “¿Te toca corte?”'}</button></div>
+        ${sent ? `<div class="wa-msg">${reactMsg(c)}</div>` : ''}</li>`;
+    }).join('');
+    const dateAgo = k => { const d = new Date(days[0]); d.setDate(Math.max(1, d.getDate() - k)); return `${d.getDate()} de ${MONTHS[d.getMonth()]}`; };
+    $('recovered').innerHTML = RECOVERED.map(([name, k]) => `<li><div class="who"><div><b>${name}</b><span>Vino el ${dateAgo(k)}</span></div><span class="num">${money(PER_RECOVERED)}</span></div></li>`).join('') +
+      `<li><div class="who"><b>A pagar (plan Por resultado)</b><b class="num">${money(PER_RECOVERED * RECOVERED.length)}</b></div></li>`;
+    $('react').querySelectorAll('button[data-i]').forEach(b => b.onclick = () => { db.sent.push(DUE[+b.dataset.i].name); save(); renderPanel(); });
+  }
+
+  $('resetDemo').onclick = () => { db.bookings = []; db.sent = []; save(); renderPanel(); reset(); };
+
+  const tabs = { cliente: $('tab-cliente'), barbero: $('tab-barbero') };
+  function showTab(name) {
+    Object.entries(tabs).forEach(([k, t]) => {
+      const on = k === name;
+      t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1;
+      $('view-' + k).hidden = !on;
+    });
+    if (name === 'barbero') renderPanel();
+  }
+  Object.entries(tabs).forEach(([k, t]) => t.onclick = () => showTab(k));
+  document.querySelector('.seg').onkeydown = e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { const k = tabs.cliente.getAttribute('aria-selected') === 'true' ? 'barbero' : 'cliente'; showTab(k); tabs[k].focus(); }
+  };
+
+  function render() {
+    $('stepK').textContent = STEP_K[s.step];
+    renderPick();
+    screens[s.step]();
+  }
+
+  $('lead').onsubmit = e => {
+    e.preventDefault();
+    const digits = $('tel').value.replace(/\D/g, ''), msg = $('leadMsg');
+    const ok = digits.length >= 10;
+    msg.textContent = ok ? 'Listo. Te escribimos por WhatsApp en menos de 24 hs hábiles.' : 'Revisá el número: código de área y número, sin el 15.';
+    msg.classList.toggle('ok', ok);
+  };
+
+  reset();
+})();
+</script>
+</body>
+</html>
