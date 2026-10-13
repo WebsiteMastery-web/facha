@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="es-AR">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Facha · Turnos con seña y clientes que vuelven, para barberías</title>
-<meta name="description" content="Agenda online para barberías de barrio. Reservas 24 hs, seña por Mercado Pago, recordatorios por WhatsApp y reactivación de clientes.">
+<title>Facha · Deposit-backed bookings and clients who come back, for barbershops</title>
+<meta name="description" content="Online booking for neighborhood barbershops. 24/7 bookings, deposits via Mercado Pago, WhatsApp reminders and client reactivation.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 :root{
@@ -121,6 +121,7 @@ button,input{font:inherit;color:inherit}
 .wa-k{font-size:12px;color:var(--ink-3);margin-bottom:8px}
 .wa-msg{background:var(--wa);border-radius:8px 8px 8px 2px;padding:8px 10px 6px;font-size:14px;line-height:1.45}
 .wa-msg small{display:block;text-align:right;font-size:11px;color:#6b7a63;margin-top:2px}
+.wa-en{font-size:12px;color:var(--ink-3);margin-top:6px;line-height:1.4}
 
 /* panel */
 .panel{display:grid;grid-template-columns:200px 1fr;min-height:520px}
@@ -291,15 +292,15 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
 
 <header class="nav">
   <div class="wrap">
-    <a href="#" aria-label="Facha, inicio"><img class="logo" src="logo.svg" alt="Facha" width="121" height="30"></a>
+    <a href="#" aria-label="Facha, home"><img class="logo" src="logo.svg" alt="Facha" width="121" height="30"></a>
     <ul>
-      <li><a href="#producto">Producto</a></li>
-      <li><a href="#precios">Precios</a></li>
-      <li><a href="#preguntas">Preguntas</a></li>
+      <li><a href="#producto">Product</a></li>
+      <li><a href="#precios">Pricing</a></li>
+      <li><a href="#preguntas">FAQ</a></li>
     </ul>
     <div class="right">
-      <a href="#">Ingresar</a>
-      <a class="btn btn-primary btn-sm" href="#lanzamiento">Probar gratis</a>
+      <a href="#">Log in</a>
+      <a class="btn btn-primary btn-sm" href="#lanzamiento">Try it free</a>
     </div>
   </div>
 </header>
@@ -308,24 +309,24 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
 <section class="hero">
   <div class="wrap">
     <div class="hero-top">
-      <h1>Que reserven solos, que dejen seña y que vuelvan.</h1>
+      <h1>Clients who book themselves, pay a deposit and come back.</h1>
       <div>
-        <p class="lede">Facha es la agenda online para barberías de barrio. Tus clientes sacan turno desde un link, pagan la seña con Mercado Pago y, cuando hace rato que no vienen, les escribimos por WhatsApp.</p>
+        <p class="lede">Facha is the online booking calendar for neighborhood barbershops. Clients book from a link, pay the deposit with Mercado Pago and, when they haven't been in for a while, we message them on WhatsApp.</p>
         <div class="ctas">
-          <a class="btn btn-primary" href="#lanzamiento">Probar gratis</a>
-          <a class="btn btn-line" href="#producto">Probar la demo</a>
+          <a class="btn btn-primary" href="#lanzamiento">Try it free</a>
+          <a class="btn btn-line" href="#producto">Try the demo</a>
         </div>
-        <p class="fine">Gratis hasta 30 turnos por mes. Sin tarjeta.</p>
+        <p class="fine">Free up to 30 bookings a month. No card needed.</p>
       </div>
     </div>
 
     <div class="demo" id="producto">
       <div class="demo-bar">
         <div class="seg" role="tablist" aria-label="Demo">
-          <button role="tab" id="tab-cliente" aria-controls="view-cliente" aria-selected="true">Vista cliente</button>
-          <button role="tab" id="tab-barbero" aria-controls="view-barbero" aria-selected="false" tabindex="-1">Panel del barbero</button>
+          <button role="tab" id="tab-cliente" aria-controls="view-cliente" aria-selected="true">Client view</button>
+          <button role="tab" id="tab-barbero" aria-controls="view-barbero" aria-selected="false" tabindex="-1">Barber's dashboard</button>
         </div>
-        <span class="demo-note">Demo funcional. Sacá un turno y miralo en el panel.</span>
+        <span class="demo-note">Working demo. Book a slot, then see it in the dashboard.</span>
       </div>
 
       <div class="frame">
@@ -337,9 +338,9 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
               <h3>Barbería Don Juan</h3>
               <p class="addr">Villa Crespo, CABA</p>
               <dl>
-                <div><dt>Horario</dt><dd>Lun a sáb · 10 a 19 hs</dd></div>
-                <div><dt>Seña</dt><dd>30% al reservar, por Mercado Pago</dd></div>
-                <div><dt>Cancelaciones</dt><dd>Hasta 12 hs antes, te devolvemos la seña</dd></div>
+                <div><dt>Hours</dt><dd>Mon to Sat · 10:00 to 19:00</dd></div>
+                <div><dt>Deposit</dt><dd>30% when booking, via Mercado Pago</dd></div>
+                <div><dt>Cancellations</dt><dd>Up to 12 hours before, deposit refunded</dd></div>
               </dl>
               <div class="pick" id="pick"></div>
             </aside>
@@ -352,25 +353,25 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
         </div>
 
         <div id="view-barbero" role="tabpanel" aria-labelledby="tab-barbero" hidden>
-          <div class="urlbar"><span>facha.app/panel</span><button class="link reset" id="resetDemo">Reiniciar demo</button></div>
+          <div class="urlbar"><span>facha.app/panel</span><button class="link reset" id="resetDemo">Reset demo</button></div>
           <div class="panel">
-            <nav class="side" aria-label="Panel">
+            <nav class="side" aria-label="Dashboard">
               <b>Barbería Don Juan</b>
-              <a class="on" href="#producto">Agenda</a>
-              <a href="#producto">Clientes</a>
-              <a href="#producto">Señas</a>
-              <a href="#producto">Servicios</a>
-              <a href="#producto">Ajustes</a>
+              <a class="on" href="#producto">Calendar</a>
+              <a href="#producto">Clients</a>
+              <a href="#producto">Deposits</a>
+              <a href="#producto">Services</a>
+              <a href="#producto">Settings</a>
             </nav>
             <div class="main">
-              <div class="main-h"><h3>Agenda</h3><span id="monthLbl"></span></div>
+              <div class="main-h"><h3>Calendar</h3><span id="monthLbl"></span></div>
               <div class="stats num" id="stats"></div>
               <div class="cols">
                 <div id="agenda"></div>
                 <div>
-                  <h4>Para reactivar <span>no vienen hace más de 4 semanas</span></h4>
+                  <h4>To reactivate <span>no visit in over 4 weeks</span></h4>
                   <ul class="list" id="react"></ul>
-                  <h4>Clientes recuperados este mes <span>vinieron por un mensaje</span></h4>
+                  <h4>Clients recovered this month <span>came back from a message</span></h4>
                   <ul class="list" id="recovered"></ul>
                 </div>
               </div>
@@ -385,13 +386,13 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
 <section class="s" id="como-funciona">
   <div class="wrap">
     <div class="s-h">
-      <h2>Lo dejás andando en una tarde.</h2>
-      <p>No tenés que cargar nada. Nos pasás tus servicios y horarios por WhatsApp y te devolvemos el link listo para poner en tu Instagram.</p>
+      <h2>Up and running in an afternoon.</h2>
+      <p>You don't have to set anything up. Send us your services and hours on WhatsApp and we send back a link ready for your Instagram.</p>
     </div>
     <ol class="steps">
-      <li><span class="n">1</span><h3>Armamos tu agenda</h3><p>Servicios, precios, horarios y cuántos sillones tenés. Conectamos tu cuenta de Mercado Pago.</p></li>
-      <li><span class="n">2</span><h3>Tus clientes reservan y señan</h3><p>Eligen horario desde el link, pagan el 30% y les llega un recordatorio por WhatsApp el día anterior.</p></li>
-      <li><span class="n">3</span><h3>Facha los trae de vuelta</h3><p>Si alguien se pasa de su ritmo habitual de corte, le escribimos con tu link y los horarios libres de la semana.</p></li>
+      <li><span class="n">1</span><h3>We set up your calendar</h3><p>Services, prices, hours and how many chairs you have. We connect your Mercado Pago account.</p></li>
+      <li><span class="n">2</span><h3>Clients book and pay a deposit</h3><p>They pick a time from the link, pay 30% and get a WhatsApp reminder the day before.</p></li>
+      <li><span class="n">3</span><h3>Facha brings them back</h3><p>If someone goes past their usual haircut rhythm, we message them with your link and this week's open slots.</p></li>
     </ol>
   </div>
 </section>
@@ -399,24 +400,24 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
 <section class="s" id="reactivacion">
   <div class="wrap react">
     <div class="copy">
-      <h2>La mayoría no se va a otra barbería. Se olvida.</h2>
-      <p>Facha aprende cada cuánto se corta cada cliente. Cuando alguien se atrasa, le manda un WhatsApp con tu link: “¿Te toca corte?”. Vos no escribís nada.</p>
+      <h2>Most clients don't switch barbershops. They forget.</h2>
+      <p>Facha learns how often each client gets a cut. When someone falls behind, it sends them a WhatsApp with your link: “¿Te toca corte?” (“Due for a cut?”). You don't write a thing.</p>
       <ul class="num">
-        <li><span>Un cliente que vuelve una vez más</span><b>$22.000</b></li>
-        <li><span>Cinco por mes</span><b>$110.000</b></li>
-        <li><span>Plan Pro</span><b>$14.900</b></li>
+        <li><span>One client coming back one more time</span><b>$22.000</b></li>
+        <li><span>Five a month</span><b>$110.000</b></li>
+        <li><span>Pro plan</span><b>$14.900</b></li>
       </ul>
     </div>
     <div class="frame">
-      <div class="frame-h"><b>Clientes</b><span>ordenados por atraso</span></div>
+      <div class="frame-h"><b>Clients</b><span>most overdue first</span></div>
       <table class="num">
-        <thead><tr><th>Cliente</th><th>Viene cada</th><th>Última vez</th><th>Estado</th></tr></thead>
+        <thead><tr><th>Client</th><th>Comes every</th><th>Last visit</th><th>Status</th></tr></thead>
         <tbody>
-          <tr><td>Santiago Ledesma</td><td>4 sem</td><td>hace 7 sem</td><td><span class="st due">Le escribimos el lunes</span></td></tr>
-          <tr><td>Joaquín Ríos</td><td>3 sem</td><td>hace 6 sem</td><td><span class="st ok">Reservó jue 17:30</span></td></tr>
-          <tr><td>Martín Sosa</td><td>4 sem</td><td>hace 5 sem</td><td><span class="st due">Le escribimos hoy</span></td></tr>
-          <tr><td>Lucas Ferreyra</td><td>3 sem</td><td>hace 2 sem</td><td><span class="st mut">Al día</span></td></tr>
-          <tr><td>Nicolás Paz</td><td>5 sem</td><td>hace 3 sem</td><td><span class="st mut">Al día</span></td></tr>
+          <tr><td>Santiago Ledesma</td><td>4 wks</td><td>7 wks ago</td><td><span class="st due">Messaging Monday</span></td></tr>
+          <tr><td>Joaquín Ríos</td><td>3 wks</td><td>6 wks ago</td><td><span class="st ok">Booked Thu 17:30</span></td></tr>
+          <tr><td>Martín Sosa</td><td>4 wks</td><td>5 wks ago</td><td><span class="st due">Messaging today</span></td></tr>
+          <tr><td>Lucas Ferreyra</td><td>3 wks</td><td>2 wks ago</td><td><span class="st mut">On track</span></td></tr>
+          <tr><td>Nicolás Paz</td><td>5 wks</td><td>3 wks ago</td><td><span class="st mut">On track</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -426,19 +427,19 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
 <section class="s" id="comparacion">
   <div class="wrap">
     <div class="s-h">
-      <h2>Lo que hoy hacés por WhatsApp, sin contestar mensajes.</h2>
-      <p>WhatsApp sirve para hablar con tus clientes. Para manejar la agenda te hace perder tiempo entre corte y corte, y plata cuando alguien no viene.</p>
+      <h2>What you do on WhatsApp today, without answering messages.</h2>
+      <p>WhatsApp is for talking to your clients. Running your bookings on it costs you time between cuts, and money when someone doesn't show.</p>
     </div>
-    <p class="cost num"><span>4 ausencias por semana</span><span>×</span><b>$22.000</b><span class="eq">≈ $350.000 por mes</span><small>Lo que pierde una barbería con un sillón cuando no cobra seña. Con seña, el horario se paga igual o se libera a tiempo.</small></p>
+    <p class="cost num"><span>4 no-shows a week</span><span>×</span><b>$22.000</b><span class="eq">≈ $350.000 a month</span><small>What a one-chair barbershop loses without deposits. With a deposit, the slot gets paid anyway or freed up in time.</small></p>
     <div class="vs">
       <table>
-        <thead><tr><th></th><th>Por WhatsApp, a mano</th><th>Con Facha</th></tr></thead>
+        <thead><tr><th></th><th>On WhatsApp, by hand</th><th>With Facha</th></tr></thead>
         <tbody>
-          <tr><td>Reservar</td><td>Cinco mensajes para encontrar un horario</td><td>El cliente elige solo, a cualquier hora</td></tr>
-          <tr><td>Seña</td><td>Pedís transferencia y revisás si llegó</td><td>30% por Mercado Pago al reservar</td></tr>
-          <tr><td>Recordatorio</td><td>Si te acordás</td><td>WhatsApp automático el día anterior</td></tr>
-          <tr><td>Cancelaciones</td><td>Te enterás cuando no viene</td><td>El horario se libera y otro lo puede tomar</td></tr>
-          <tr><td>Clientes que dejan de venir</td><td>No te enterás</td><td>Les escribimos cuando se atrasan</td></tr>
+          <tr><td>Booking</td><td>Five messages to find a time</td><td>Clients pick a slot themselves, any time</td></tr>
+          <tr><td>Deposit</td><td>You ask for a transfer and check if it arrived</td><td>30% via Mercado Pago when booking</td></tr>
+          <tr><td>Reminder</td><td>If you remember</td><td>Automatic WhatsApp the day before</td></tr>
+          <tr><td>Cancellations</td><td>You find out when they don't show</td><td>The slot is freed up for someone else</td></tr>
+          <tr><td>Clients who stop coming</td><td>You never find out</td><td>We message them when they fall behind</td></tr>
         </tbody>
       </table>
     </div>
@@ -448,50 +449,50 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
 <section class="s" id="precios">
   <div class="wrap">
     <div class="s-h">
-      <h2>Precios</h2>
-      <p>Empezás gratis. Para cobrar seña y reactivar clientes, elegís: cuota fija o pagás solo por los clientes que vuelven. Sin permanencia.</p>
+      <h2>Pricing</h2>
+      <p>Start free. To take deposits and reactivate clients, choose a flat monthly fee or pay only for clients who come back. No lock-in.</p>
     </div>
     <div class="plans">
       <div class="plan">
-        <h3>Gratis</h3>
+        <h3>Free</h3>
         <p class="p num">$0</p>
-        <p class="d">Para probar con tus clientes de siempre.</p>
+        <p class="d">To try it out with your regulars.</p>
         <ul>
-          <li>Hasta 30 turnos por mes</li>
-          <li>Link de reservas para Instagram y WhatsApp</li>
-          <li>Recordatorio por email</li>
-          <li>Panel con agenda del día</li>
+          <li>Up to 30 bookings a month</li>
+          <li>Booking link for Instagram and WhatsApp</li>
+          <li>Email reminder</li>
+          <li>Dashboard with today's calendar</li>
         </ul>
-        <a class="btn btn-line" href="#lanzamiento">Empezar gratis</a>
+        <a class="btn btn-line" href="#lanzamiento">Start free</a>
       </div>
       <div class="plan pro">
-        <h3>Pro <em>Setup gratis en el lanzamiento</em></h3>
-        <p class="p num">$14.900 <small>/ mes</small></p>
-        <p class="d">Para la barbería que vive de los turnos.</p>
+        <h3>Pro <em>Free setup at launch</em></h3>
+        <p class="p num">$14.900 <small>/ month</small></p>
+        <p class="d">For barbershops that live on bookings.</p>
         <ul>
-          <li>Turnos ilimitados</li>
-          <li>Seña por Mercado Pago</li>
-          <li>Recordatorios por WhatsApp ilimitados</li>
-          <li>Reactivación automática de clientes</li>
-          <li>Setup hecho por nosotros</li>
+          <li>Unlimited bookings</li>
+          <li>Deposits via Mercado Pago</li>
+          <li>Unlimited WhatsApp reminders</li>
+          <li>Automatic client reactivation</li>
+          <li>Setup done by us</li>
         </ul>
-        <a class="btn btn-line" href="#lanzamiento">Probar Pro</a>
+        <a class="btn btn-line" href="#lanzamiento">Try Pro</a>
       </div>
       <div class="plan pro rec">
-        <h3>Por resultado <em>Recomendado</em></h3>
-        <p class="p num">$0 <small>fijo</small></p>
-        <p class="d">Pagás $3.000 por cada cliente que vuelve gracias a un mensaje de reactivación.</p>
+        <h3>Pay per result <em>Recommended</em></h3>
+        <p class="p num">$0 <small>fixed</small></p>
+        <p class="d">Pay $3.000 for each client who comes back thanks to a reactivation message.</p>
         <ul>
-          <li>Todo lo de Pro</li>
-          <li>Sin cuota mensual</li>
-          <li>Si no vuelve nadie, no pagás nada</li>
+          <li>Everything in Pro</li>
+          <li>No monthly fee</li>
+          <li>If nobody comes back, you pay nothing</li>
         </ul>
-        <a class="btn btn-primary" href="#lanzamiento">Empezar sin riesgo</a>
+        <a class="btn btn-primary" href="#lanzamiento">Start risk-free</a>
       </div>
     </div>
     <div class="guar">
-      <p><b>Garantía.</b> Pro: si en el primer mes no recuperás más de lo que pagás, no pagás. Por resultado: si no vuelve nadie, no pagás nada.</p>
-      <p>La comisión de Mercado Pago la cobra Mercado Pago. Facha no se queda con ningún porcentaje de tus señas.</p>
+      <p><b>Guarantee.</b> Pro: if you don't recover more than you pay in your first month, you don't pay. Pay per result: if nobody comes back, you pay nothing.</p>
+      <p>Mercado Pago's fee is charged by Mercado Pago. Facha takes no cut of your deposits.</p>
     </div>
   </div>
 </section>
@@ -499,18 +500,18 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
 <section class="s" id="preguntas">
   <div class="wrap faq">
     <div>
-      <h2>Preguntas</h2>
-      <p>¿Otra duda? Escribinos a <a href="mailto:hola@facha.app">hola@facha.app</a>.</p>
+      <h2>FAQ</h2>
+      <p>Something else? Email us at <a href="mailto:hola@facha.app">hola@facha.app</a>.</p>
     </div>
     <div>
-      <details><summary>¿Mis clientes tienen que bajarse una app?</summary><p>No. Reservan desde un link que abre en el navegador del celular. Lo ponés en la bio de Instagram o lo mandás por WhatsApp.</p></details>
-      <details><summary>¿Cuándo me llega la plata de las señas?</summary><p>Va directo a tu cuenta de Mercado Pago, en los plazos que tengas configurados ahí. Nosotros nunca tocamos esa plata.</p></details>
-      <details><summary>¿Qué pasa si el cliente cancela?</summary><p>Vos definís la regla. Por defecto, si cancela con más de 12 horas se le devuelve la seña; si no viene, la seña queda para vos.</p></details>
-      <details><summary>¿Cómo sabe Facha a quién escribirle?</summary><p>Mira las visitas de cada cliente. Si alguien se corta cada 4 semanas y ya van 5, le manda un mensaje con tu link. Podés pausarlo por cliente o apagarlo del todo.</p></details>
-      <details><summary>¿Sirve si somos varios barberos?</summary><p>Sí. Cada barbero tiene su agenda y el cliente elige con quién se atiende.</p></details>
-      <details><summary>¿Cómo funciona la garantía?</summary><p>Al terminar el primer mes de Pro sumamos las señas cobradas por ausencias y los turnos que vinieron por reactivación. Si eso no supera los $14.900, no te cobramos el mes.</p></details>
-      <details><summary>¿Cómo cuentan un cliente recuperado en el plan Por resultado?</summary><p>Es alguien que no venía hace 4 semanas o más, recibió nuestro mensaje de reactivación y reservó turno dentro de los 14 días siguientes. Solo esos se cobran, a $3.000 cada uno, y los ves uno por uno en el panel.</p></details>
-      <details><summary>¿Hay permanencia?</summary><p>No. Cancelás desde el panel cuando quieras y volvés al plan Gratis.</p></details>
+      <details><summary>Do my clients need to download an app?</summary><p>No. They book from a link that opens in their phone's browser. Put it in your Instagram bio or send it on WhatsApp.</p></details>
+      <details><summary>When do I get the deposit money?</summary><p>It goes straight to your Mercado Pago account, on whatever payout schedule you have set there. We never touch that money.</p></details>
+      <details><summary>What happens if a client cancels?</summary><p>You set the rule. By default, cancelling more than 12 hours ahead gets the deposit back; if they don't show, you keep the deposit.</p></details>
+      <details><summary>How does Facha know who to message?</summary><p>It tracks each client's visits. If someone gets a cut every 4 weeks and it's been 5, it sends them a message with your link. You can pause it per client or turn it off entirely.</p></details>
+      <details><summary>Does it work with several barbers?</summary><p>Yes. Each barber has their own calendar and clients choose who they book with.</p></details>
+      <details><summary>How does the guarantee work?</summary><p>At the end of your first month on Pro, we add up deposits kept from no-shows and bookings that came from reactivation. If that doesn't exceed $14.900, we don't charge you for the month.</p></details>
+      <details><summary>How do you count a recovered client on Pay per result?</summary><p>Someone who hadn't been in for 4 weeks or more, got our reactivation message and booked within the next 14 days. Only those are charged, at $3.000 each, and you can see every one in the dashboard.</p></details>
+      <details><summary>Is there a minimum contract?</summary><p>No. Cancel from the dashboard whenever you like and you go back to the Free plan.</p></details>
     </div>
   </div>
 </section>
@@ -519,16 +520,16 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
   <div class="wrap">
     <div class="launch">
       <div>
-        <h2>Lanzamiento en Villa Crespo: setup gratis para los primeros 50 barberos</h2>
-        <p>Pasamos por tu barbería, cargamos todo y conectamos tu Mercado Pago. Después seguís en Gratis o pasás a Pro.</p>
+        <h2>Launching in Villa Crespo: free setup for the first 50 barbers</h2>
+        <p>We come by your shop, load everything in and connect your Mercado Pago. After that, stay on Free or move up to Pro.</p>
       </div>
       <form id="lead" novalidate>
-        <label for="tel">Tu WhatsApp</label>
+        <label for="tel">Your WhatsApp</label>
         <div class="in">
           <input id="tel" type="tel" inputmode="tel" placeholder="11 5555 5555" autocomplete="tel">
-          <button class="btn btn-primary" type="submit">Probar gratis</button>
+          <button class="btn btn-primary" type="submit">Try it free</button>
         </div>
-        <p class="msg" id="leadMsg" role="status">Te escribimos nosotros. No te vamos a llenar de mensajes.</p>
+        <p class="msg" id="leadMsg" role="status">We'll reach out to you. No message spam, promise.</p>
       </form>
     </div>
   </div>
@@ -538,27 +539,30 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
 <footer>
   <div class="wrap">
     <div class="foot">
-      <div><img class="logo" src="logo.svg" alt="Facha" width="113" height="28"><p>Tu barbería, con facha. Agenda, señas y reactivación de clientes para barberías.</p></div>
-      <div><h4>Producto</h4><ul><li><a href="#producto">Demo</a></li><li><a href="#precios">Precios</a></li><li><a href="#preguntas">Preguntas</a></li></ul></div>
-      <div><h4>Contacto</h4><ul><li><a href="mailto:hola@facha.app">hola@facha.app</a></li><li><a href="#">Instagram</a></li></ul></div>
-      <div><h4>Legal</h4><ul><li><a href="#">Términos y condiciones</a></li><li><a href="#">Privacidad</a></li><li><a href="#">Botón de arrepentimiento</a></li></ul></div>
+      <div><img class="logo" src="logo.svg" alt="Facha" width="113" height="28"><p>Your barbershop, looking sharp. Booking, deposits and client reactivation for barbershops.</p></div>
+      <div><h4>Product</h4><ul><li><a href="#producto">Demo</a></li><li><a href="#precios">Pricing</a></li><li><a href="#preguntas">FAQ</a></li></ul></div>
+      <div><h4>Contact</h4><ul><li><a href="mailto:hola@facha.app">hola@facha.app</a></li><li><a href="#">Instagram</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="#">Terms and conditions</a></li><li><a href="#">Privacy</a></li><li><a href="#">Withdrawal button (Botón de arrepentimiento)</a></li></ul></div>
     </div>
-    <div class="legal"><span>© 2026 Facha</span><span>Hecho en Buenos Aires</span></div>
+    <div class="legal"><span>© 2026 Facha</span><span>Made in Buenos Aires</span></div>
   </div>
 </footer>
 
 <script>
 (() => {
+  // name = UI label; es = wording inside the Spanish WhatsApp messages
   const SERVICES = [
-    { name: 'Corte', time: '30 min', price: 22000 },
-    { name: 'Corte + barba', time: '45 min', price: 30000 },
-    { name: 'Barba', time: '20 min', price: 16000 },
+    { name: 'Haircut', es: 'corte', time: '30 min', price: 22000 },
+    { name: 'Haircut + beard', es: 'corte + barba', time: '45 min', price: 30000 },
+    { name: 'Beard', es: 'barba', time: '20 min', price: 16000 },
   ];
   const SENA = 0.3;
   const HOURS = ['10:00','10:30','11:00','11:30','12:00','15:00','15:30','16:00','16:30','17:00','17:30','18:00'];
-  const DAYS_SHORT = ['dom','lun','mar','mié','jue','vie','sáb'];
-  const DAYS_LONG = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-  const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const DAYS_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const DAYS_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DAYS_LONG_ES = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const MONTHS_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
   const $ = id => document.getElementById(id);
   const body = $('appBody'), foot = $('appFoot');
@@ -568,7 +572,8 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
   const days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + i); return d;
   });
-  const longDate = d => `${DAYS_LONG[d.getDay()]} ${d.getDate()} de ${MONTHS[d.getMonth()]}`;
+  const longDate = d => `${DAYS_LONG[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+  const longDateEs = d => `${DAYS_LONG_ES[d.getDay()]} ${d.getDate()} de ${MONTHS_ES[d.getMonth()]}`;
   const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
   // Shared demo state: bookings from the client view + reactivation messages sent.
@@ -592,29 +597,29 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
     return b;
   };
   const setFoot = (...btns) => { foot.replaceChildren(...btns); foot.hidden = !btns.length; };
-  const back = () => btn('Atrás', 'btn-line', () => go(s.step - 1));
+  const back = () => btn('Back', 'btn-line', () => go(s.step - 1));
   const title = t => `<h3>${t}</h3>`;
 
   const screens = [
     () => {
-      body.innerHTML = title('Elegí el servicio') + SERVICES.map((x, i) =>
+      body.innerHTML = title('Choose a service') + SERVICES.map((x, i) =>
         `<button class="svc${s.service === i ? ' sel' : ''}" data-i="${i}"><span>${x.name}<small>${x.time}</small></span><b class="num">${money(x.price)}</b></button>`).join('');
       body.querySelectorAll('.svc').forEach(el => el.onclick = () => { s.service = +el.dataset.i; render(); });
-      setFoot(btn('Continuar', 'btn-primary', () => go(1), s.service === null));
+      setFoot(btn('Continue', 'btn-primary', () => go(1), s.service === null));
     },
     () => {
-      body.innerHTML = title('Elegí día y horario') + '<div class="days">' + days.map((d, i) =>
-        `<button class="day${s.day === i ? ' sel' : ''}" data-i="${i}"><small>${i === 0 ? 'hoy' : DAYS_SHORT[d.getDay()]}</small><b>${d.getDate()}</b></button>`).join('') +
+      body.innerHTML = title('Choose a day and time') + '<div class="days">' + days.map((d, i) =>
+        `<button class="day${s.day === i ? ' sel' : ''}" data-i="${i}"><small>${i === 0 ? 'today' : DAYS_SHORT[d.getDay()]}</small><b>${d.getDate()}</b></button>`).join('') +
         '</div><div class="slots num">' + HOURS.map((h, i) =>
         `<button class="slot${s.hour === h ? ' sel' : ''}" data-h="${h}"${isTaken(s.day, i) ? ' disabled' : ''}>${h}</button>`).join('') + '</div>';
       body.querySelectorAll('.day').forEach(el => el.onclick = () => { s.day = +el.dataset.i; s.hour = null; render(); });
       body.querySelectorAll('.slot:not(:disabled)').forEach(el => el.onclick = () => { s.hour = el.dataset.h; render(); });
-      setFoot(back(), btn('Continuar', 'btn-primary', () => go(2), !s.hour));
+      setFoot(back(), btn('Continue', 'btn-primary', () => go(2), !s.hour));
     },
     () => {
-      body.innerHTML = title('Tus datos') + '<label class="lbl" for="nameIn">Nombre</label><input class="field" id="nameIn" maxlength="30" placeholder="Martín" autocomplete="given-name"><p class="hint" id="hint" role="alert"></p>';
-      const inp = $('nameIn'), next = btn('Continuar', 'btn-primary', () => {
-        if (s.name.length < 2) { $('hint').textContent = 'Poné tu nombre así Juan sabe quién viene.'; return; }
+      body.innerHTML = title('Your details') + '<label class="lbl" for="nameIn">Name</label><input class="field" id="nameIn" maxlength="30" placeholder="Martín" autocomplete="given-name"><p class="hint" id="hint" role="alert"></p>';
+      const inp = $('nameIn'), next = btn('Continue', 'btn-primary', () => {
+        if (s.name.length < 2) { $('hint').textContent = 'Enter your name so Juan knows who\'s coming.'; return; }
         go(3);
       });
       inp.value = s.name;
@@ -625,21 +630,21 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
     },
     () => {
       const sv = SERVICES[s.service], dep = sv.price * SENA;
-      body.innerHTML = title('Revisá y pagá la seña') + `<div class="rows num">
-        <div><span>Servicio</span><b>${sv.name}</b></div>
-        <div><span>Cuándo</span><b>${longDate(days[s.day])}, ${s.hour} hs</b></div>
-        <div><span>A nombre de</span><b>${esc(s.name)}</b></div>
-        <div><span>Precio</span><span>${money(sv.price)}</span></div>
-        <div class="tot"><span>Seña ahora (30%)</span><span>${money(dep)}</span></div>
-        <div><span>En la barbería</span><span>${money(sv.price - dep)}</span></div>
+      body.innerHTML = title('Review and pay the deposit') + `<div class="rows num">
+        <div><span>Service</span><b>${sv.name}</b></div>
+        <div><span>When</span><b>${longDate(days[s.day])}, ${s.hour}</b></div>
+        <div><span>Name</span><b>${esc(s.name)}</b></div>
+        <div><span>Price</span><span>${money(sv.price)}</span></div>
+        <div class="tot"><span>Deposit now (30%)</span><span>${money(dep)}</span></div>
+        <div><span>At the barbershop</span><span>${money(sv.price - dep)}</span></div>
       </div>`;
-      setFoot(back(), btn(`Pagar ${money(dep)} con Mercado Pago`, 'btn-primary', () => go(4)));
+      setFoot(back(), btn(`Pay ${money(dep)} with Mercado Pago`, 'btn-primary', () => go(4)));
     },
     () => {
       const dep = SERVICES[s.service].price * SENA;
       body.innerHTML = title('Mercado Pago') + `<div class="mp"><div class="mp-h"><i></i>Mercado Pago</div>
-        <div class="amt num">${money(dep)}</div><p>Seña · Barbería Don Juan</p><div class="bar"><i></i></div>
-        <p style="margin:10px 0 0">Procesando el pago…</p></div>`;
+        <div class="amt num">${money(dep)}</div><p>Deposit · Barbería Don Juan</p><div class="bar"><i></i></div>
+        <p style="margin:10px 0 0">Processing payment…</p></div>`;
       setFoot();
       setTimeout(() => {
         if (s.step !== 4) return;
@@ -650,24 +655,25 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
     () => {
       const sv = SERVICES[s.service], d = days[s.day];
       const prev = new Date(d); prev.setDate(d.getDate() - 1);
-      const when = s.day === 0 ? 'hoy a las 9:00' : `${DAYS_LONG[prev.getDay()]} a las 9:00`;
-      body.innerHTML = title('Turno confirmado') + `<div class="done"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
-        <p>${sv.name}, ${longDate(d)} a las ${s.hour} hs.<br>Seña pagada: <b class="num">${money(sv.price * SENA)}</b>. Te llegó el comprobante por email.</p></div>
-        <div class="wa"><div class="wa-k">Recordatorio por WhatsApp · se envía ${when}</div>
-        <div class="wa-msg">Hola ${esc(s.name)}. Te recordamos tu turno de ${sv.name.toLowerCase()} en Barbería Don Juan, ${s.day === 1 ? 'mañana' : longDate(d)} a las ${s.hour} hs. Ya pagaste ${money(sv.price * SENA)} de seña. Si no podés venir, respondé este mensaje y liberamos el horario.<small>9:00 ✓✓</small></div></div>`;
-      setFoot(btn('Ver en el panel del barbero', 'btn-line', () => showTab('barbero')), btn('Sacar otro turno', 'btn-primary', reset));
+      const when = s.day === 0 ? 'today at 9:00' : `${DAYS_LONG[prev.getDay()]} at 9:00`;
+      body.innerHTML = title('Booking confirmed') + `<div class="done"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        <p>${sv.name}, ${longDate(d)} at ${s.hour}.<br>Deposit paid: <b class="num">${money(sv.price * SENA)}</b>. Your receipt is in your email.</p></div>
+        <div class="wa"><div class="wa-k">WhatsApp reminder · goes out ${when}</div>
+        <div class="wa-msg">Hola ${esc(s.name)}. Te recordamos tu turno de ${sv.es} en Barbería Don Juan, ${s.day === 1 ? 'mañana' : longDateEs(d)} a las ${s.hour} hs. Ya pagaste ${money(sv.price * SENA)} de seña. Si no podés venir, respondé este mensaje y liberamos el horario.<small>9:00 ✓✓</small></div>
+        <div class="wa-en">Sent in Spanish: reminds them of the booking and deposit; replying frees the slot.</div></div>`;
+      setFoot(btn('See it in the dashboard', 'btn-line', () => showTab('barbero')), btn('Book another', 'btn-primary', reset));
     },
   ];
-  const STEP_K = ['Paso 1 de 4', 'Paso 2 de 4', 'Paso 3 de 4', 'Paso 4 de 4', 'Paso 4 de 4', 'Listo'];
+  const STEP_K = ['Step 1 of 4', 'Step 2 of 4', 'Step 3 of 4', 'Step 4 of 4', 'Step 4 of 4', 'Done'];
 
   const renderPick = () => {
     const sv = SERVICES[s.service];
-    $('pick').innerHTML = sv ? `<div><span>Servicio</span>${sv.name}</div>` +
-      (s.step > 1 ? `<div><span>Día</span>${DAYS_SHORT[days[s.day].getDay()]} ${days[s.day].getDate()}, ${s.hour}</div>` : '') +
-      `<div><span>Seña</span><b class="num">${money(sv.price * SENA)}</b></div>` : '';
+    $('pick').innerHTML = sv ? `<div><span>Service</span>${sv.name}</div>` +
+      (s.step > 1 ? `<div><span>Day</span>${DAYS_SHORT[days[s.day].getDay()]} ${days[s.day].getDate()}, ${s.hour}</div>` : '') +
+      `<div><span>Deposit</span><b class="num">${money(sv.price * SENA)}</b></div>` : '';
   };
 
-  /* ---------- Panel del barbero ---------- */
+  /* ---------- Barber's dashboard ---------- */
   const SEED_TODAY = [ // matches the slots isTaken() marks for today
     { hour: '10:00', name: 'Lucas Ferreyra', service: 0 },
     { hour: '11:00', name: 'Nicolás Paz', service: 1 },
@@ -675,9 +681,9 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
     { hour: '15:30', name: 'Facundo Romero', service: 0 },
     { hour: '18:00', name: 'Mateo Díaz', service: 1 },
   ];
-  // 50 cortes + 26 corte y barba + 10 barbas
+  // 50 cuts + 26 cut & beard + 10 beards
   const SEED_MONTH = { turnos: 86, ingresos: 2040000, ausencias: 2 };
-  const DUE = [
+  const DUE = [ // slot is Spanish: it only appears inside the WhatsApp message
     { name: 'Santiago Ledesma', weeks: 7, service: 1, slot: 'mañana a las 16:00' },
     { name: 'Joaquín Ríos', weeks: 6, service: 0, slot: 'el jueves a las 17:30' },
     { name: 'Martín Sosa', weeks: 5, service: 0, slot: 'el viernes a las 11:30' },
@@ -685,7 +691,7 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
   const RECOVERED = [['Lucas Benítez', 2], ['Tomás Aguirre', 5], ['Ezequiel Moreno', 9]];
   const PER_RECOVERED = 3000;
   const reactMsg = c => `Hola ${esc(c.name.split(' ')[0])}, ¿cómo va? Ya pasaron ${c.weeks} semanas de tu último corte. ¿Te toca corte? Juan tiene lugar ${c.slot}. Reservá acá: facha.app/donjuan<small>ahora ✓✓</small>`;
-  const apptRow = a => `<li class="appt${a.isNew ? ' new' : ''}"><time class="num">${a.hour}</time><div><b>${esc(a.name)}</b>${a.isNew ? '<em class="tag">Nuevo</em>' : ''}<span>${SERVICES[a.service].name} · ${money(SERVICES[a.service].price)}</span></div><span class="paid num">Seña ${money(SERVICES[a.service].price * SENA)}</span></li>`;
+  const apptRow = a => `<li class="appt${a.isNew ? ' new' : ''}"><time class="num">${a.hour}</time><div><b>${esc(a.name)}</b>${a.isNew ? '<em class="tag">New</em>' : ''}<span>${SERVICES[a.service].name} · ${money(SERVICES[a.service].price)}</span></div><span class="paid num">Deposit ${money(SERVICES[a.service].price * SENA)}</span></li>`;
 
   function renderPanel() {
     const today = iso(days[0]);
@@ -698,24 +704,24 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
 
     $('monthLbl').textContent = `${MONTHS[days[0].getMonth()]} ${days[0].getFullYear()}`;
     $('stats').innerHTML = [
-      ['Turnos del mes', SEED_MONTH.turnos + n, n ? `${n} desde esta demo` : 'todos con seña'],
-      ['Facturación estimada', money(SEED_MONTH.ingresos + extra), 'precio de lista'],
-      ['Señas del mes', money((SEED_MONTH.ingresos + extra) * SENA), 'en tu Mercado Pago'],
-      ['Ausencias', SEED_MONTH.ausencias, 'seña retenida'],
+      ['Bookings this month', SEED_MONTH.turnos + n, n ? `${n} from this demo` : 'all with deposit'],
+      ['Estimated revenue', money(SEED_MONTH.ingresos + extra), 'at list price'],
+      ['Deposits this month', money((SEED_MONTH.ingresos + extra) * SENA), 'in your Mercado Pago'],
+      ['No-shows', SEED_MONTH.ausencias, 'deposit kept'],
     ].map(([l, v, sub]) => `<div><span>${l}</span><b>${v}</b><small>${sub}</small></div>`).join('');
 
-    $('agenda').innerHTML = `<h4>Hoy, ${longDate(days[0])} <span class="num">${money(senasHoy)} en señas</span></h4><ul class="list">${todayList.map(apptRow).join('')}</ul>` +
-      (later.length ? `<h4>Próximos días</h4><ul class="list">${later.map(b => apptRow({ ...b, hour: `${DAYS_SHORT[new Date(b.date + 'T00:00').getDay()]} ${b.hour}` })).join('')}</ul>` : '');
+    $('agenda').innerHTML = `<h4>Today, ${longDate(days[0])} <span class="num">${money(senasHoy)} in deposits</span></h4><ul class="list">${todayList.map(apptRow).join('')}</ul>` +
+      (later.length ? `<h4>Upcoming</h4><ul class="list">${later.map(b => apptRow({ ...b, hour: `${DAYS_SHORT[new Date(b.date + 'T00:00').getDay()]} ${b.hour}` })).join('')}</ul>` : '');
 
     $('react').innerHTML = DUE.map((c, i) => {
       const sent = db.sent.includes(c.name);
-      return `<li><div class="who"><div><b>${c.name}</b><span>Último corte hace ${c.weeks} semanas</span></div>
-        <button class="btn btn-sm ${sent ? 'btn-line' : 'btn-dark'}" data-i="${i}"${sent ? ' disabled' : ''}>${sent ? 'Enviado' : 'Enviar “¿Te toca corte?”'}</button></div>
-        ${sent ? `<div class="wa-msg">${reactMsg(c)}</div>` : ''}</li>`;
+      return `<li><div class="who"><div><b>${c.name}</b><span>Last cut ${c.weeks} weeks ago</span></div>
+        <button class="btn btn-sm ${sent ? 'btn-line' : 'btn-dark'}" data-i="${i}"${sent ? ' disabled' : ''}>${sent ? 'Sent' : 'Send “¿Te toca corte?”'}</button></div>
+        ${sent ? `<div class="wa-msg">${reactMsg(c)}</div><div class="wa-en">“Due for a cut?” with Juan's next open slot and your booking link.</div>` : ''}</li>`;
     }).join('');
-    const dateAgo = k => { const d = new Date(days[0]); d.setDate(Math.max(1, d.getDate() - k)); return `${d.getDate()} de ${MONTHS[d.getMonth()]}`; };
-    $('recovered').innerHTML = RECOVERED.map(([name, k]) => `<li><div class="who"><div><b>${name}</b><span>Vino el ${dateAgo(k)}</span></div><span class="num">${money(PER_RECOVERED)}</span></div></li>`).join('') +
-      `<li><div class="who"><b>A pagar (plan Por resultado)</b><b class="num">${money(PER_RECOVERED * RECOVERED.length)}</b></div></li>`;
+    const dateAgo = k => { const d = new Date(days[0]); d.setDate(Math.max(1, d.getDate() - k)); return `${MONTHS[d.getMonth()]} ${d.getDate()}`; };
+    $('recovered').innerHTML = RECOVERED.map(([name, k]) => `<li><div class="who"><div><b>${name}</b><span>Came in ${dateAgo(k)}</span></div><span class="num">${money(PER_RECOVERED)}</span></div></li>`).join('') +
+      `<li><div class="who"><b>Due (Pay per result plan)</b><b class="num">${money(PER_RECOVERED * RECOVERED.length)}</b></div></li>`;
     $('react').querySelectorAll('button[data-i]').forEach(b => b.onclick = () => { db.sent.push(DUE[+b.dataset.i].name); save(); renderPanel(); });
   }
 
@@ -745,7 +751,7 @@ footer{padding:56px 0 40px;margin-top:104px;border-top:1px solid var(--line)}
     e.preventDefault();
     const digits = $('tel').value.replace(/\D/g, ''), msg = $('leadMsg');
     const ok = digits.length >= 10;
-    msg.textContent = ok ? 'Listo. Te escribimos por WhatsApp en menos de 24 hs hábiles.' : 'Revisá el número: código de área y número, sin el 15.';
+    msg.textContent = ok ? 'Done. We\'ll message you on WhatsApp within 24 business hours.' : 'Check the number: area code plus number, without the 15.';
     msg.classList.toggle('ok', ok);
   };
 
